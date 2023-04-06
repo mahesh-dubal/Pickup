@@ -160,6 +160,10 @@ class Pickup {
 		//To create a custom post type
 		$this->loader->add_action('init', $plugin_admin, 'create_store_post_type');
 
+		//To add meta boxes
+		$this->loader->add_action('add_meta_boxes', $plugin_admin, 'add_store_meta_box');
+
+
 
 	}
 
