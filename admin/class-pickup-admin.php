@@ -221,4 +221,32 @@ class Pickup_Admin
 		$columns['contact_info'] = 'contact_info';
 		return $columns;
 	}
+
+	function send_order_confirmation_mail()
+	{
+		// Get current user's email
+		$current_user = wp_get_current_user();
+		$to = $current_user->user_email;
+
+		// Get pickup date and selected store from POST data
+		if (isset($_POST['pickup_date']) && !empty($_POST['pickup_date'])) {
+			$pickup_date = sanitize_text_field($_POST['pickup_date']);
+		}
+
+		if (isset($_POST['store_options']) && !empty($_POST['store_options'])) {
+			$selected_store = sanitize_text_field($_POST['store_options']);
+		}
+
+		// Send confirmation email
+		
+		$subject = 'Order Confirmation';
+
+		$message = "Thank you for your order!\n\n";
+		$message .= "Pickup Date: $pickup_date\n";
+		$message .= "Selected Store: $selected_store\n";
+
+		$headers = array('Content-Type: text/html; charset=UTF-8');
+
+		wp_mail($to, $subject, $message, $headers);
+	}
 }
