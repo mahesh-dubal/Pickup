@@ -169,6 +169,12 @@ class Pickup {
 		//To add custom columns on admin panel
 		$this->loader->add_filter('manage_store_posts_columns', $plugin_admin, 'add_store_list_columns');
 
+		//To display columns added by above hook callback
+		$this->loader->add_action('manage_store_posts_custom_column', $plugin_admin, 'display_store_list_columns', 10, 2);
+
+		
+
+
 
 
 
