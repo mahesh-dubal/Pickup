@@ -130,4 +130,33 @@ class Pickup_Admin
 			'high'
 		);
 	}
+
+	//Callback for add_meta_box to create HTML markup for metaboxes
+	function store_information_meta_box_callback($post)
+	{
+		$store_name = get_post_meta($post->ID, '_store_name', true);
+		$store_address = get_post_meta($post->ID, '_store_address', true);
+		$contact_info = get_post_meta($post->ID, '_contact_info', true);
+
+		wp_nonce_field('store_information', 'store_information_nonce');
+?>
+		<table class="form-table">
+			<tbody>
+				<tr>
+					<th><label for="store_name"><?php _e('Store Name', 'pickup_store'); ?></label></th>
+					<td><input type="text" id="store_name" name="store_name" value="<?php echo esc_attr($store_name); ?>"></td>
+				</tr>
+				<tr>
+					<th><label for="store_address"><?php _e('Store Address', 'pickup_store'); ?></label></th>
+					<td><textarea id="store_address" name="store_address"><?php echo esc_textarea($store_address); ?></textarea></td>
+				</tr>
+				<tr>
+					<th><label for="contact_info"><?php _e('Contact Info', 'pickup_store'); ?></label></th>
+					<td><input type="text" id="contact_info" name="contact_info" value="<?php echo esc_attr($contact_info); ?>"></td>
+				</tr>
+
+			</tbody>
+		</table>
+<?php
+	}
 }
