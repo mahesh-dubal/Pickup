@@ -175,6 +175,9 @@ class Pickup {
 		//To make column sortable
 		$this->loader->add_filter('manage_edit-store_sortable_columns', $plugin_admin, 'make_store_list_columns_sortable');
 
+		//To send ordr confirmation mail with store details and pickup date
+		$this->loader->add_action('woocommerce_email_order_details', $plugin_admin, 'send_order_confirmation_mail', 10);
+
 
 
 
@@ -198,10 +201,8 @@ class Pickup {
 		$this->loader->add_action( 'wp_enqueue_scripts', $plugin_public, 'enqueue_scripts' );
 
 		//To define shortcode
-		$this->loader->add_action( 'init', $plugin_public, 'define_shortcode');
-		 
+		$this->loader->add_action( 'init', $plugin_public, 'define_shortcode' );
 		//To display date and option field on checkout field
-		add_shortcode('store_options', 'display_store_options');
 
 		//To dispplay shortcode on checkout page
 		$this->loader->add_action( 'woocommerce_after_order_notes', $plugin_public, 'display_store_options_shortcode' );
