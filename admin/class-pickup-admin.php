@@ -143,20 +143,29 @@ class Pickup_Admin
 		<table class="form-table">
 			<tbody>
 				<tr>
-					<th><label for="store_name"><?php _e('Store Name', 'pickup_store'); ?></label></th>
+					<th><label for="store_name"><?php _e('Store Name', 'picup'); ?></label></th>
 					<td><input type="text" id="store_name" name="store_name" value="<?php echo esc_attr($store_name); ?>"></td>
 				</tr>
 				<tr>
-					<th><label for="store_address"><?php _e('Store Address', 'pickup_store'); ?></label></th>
+					<th><label for="store_address"><?php _e('Store Address', 'pickup'); ?></label></th>
 					<td><textarea id="store_address" name="store_address"><?php echo esc_textarea($store_address); ?></textarea></td>
 				</tr>
 				<tr>
-					<th><label for="contact_info"><?php _e('Contact Info', 'pickup_store'); ?></label></th>
+					<th><label for="contact_info"><?php _e('Contact Info', 'pickup'); ?></label></th>
 					<td><input type="text" id="contact_info" name="contact_info" value="<?php echo esc_attr($contact_info); ?>"></td>
 				</tr>
 
 			</tbody>
 		</table>
 <?php
+	}
+
+	//To add custom columns to the admin panel's list of stores. 
+	function add_store_list_columns($columns)
+	{
+		$columns['store_name'] = __('Store Name', 'pickup');
+		$columns['store_address'] = __('Store Address', 'pickup');
+		$columns['contact_info'] = __('Contact Info', 'pickup');
+		return $columns;
 	}
 }
