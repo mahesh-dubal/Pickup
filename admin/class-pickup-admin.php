@@ -168,4 +168,20 @@ class Pickup_Admin
 		$columns['contact_info'] = __('Contact Info', 'pickup');
 		return $columns;
 	}
+
+	//To display the data for each column added by the previous function.
+	function display_store_list_columns($column, $post_id)
+	{
+		switch ($column) {
+			case 'store_name':
+				echo get_post_meta($post_id, '_store_name', true);
+				break;
+			case 'store_address':
+				echo get_post_meta($post_id, '_store_address', true);
+				break;
+			case 'contact_info':
+				echo get_post_meta($post_id, '_contact_info', true);
+				break;
+		}
+	}
 }
