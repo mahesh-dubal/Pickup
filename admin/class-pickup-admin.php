@@ -117,4 +117,17 @@ class Pickup_Admin
 			)
 		);
 	}
+
+	//Adding custom meta boxes to the this custom post type
+	function add_store_meta_box()
+	{
+		add_meta_box(
+			'store_information',
+			__('Store Information', 'pickup'),
+			'store_information_meta_box_callback',
+			'store',
+			'normal',
+			'high'
+		);
+	}
 }
