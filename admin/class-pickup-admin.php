@@ -224,9 +224,6 @@ class Pickup_Admin
 
 	function send_order_confirmation_mail()
 	{
-		// Get current user's email
-		$current_user = wp_get_current_user();
-		$to = $current_user->user_email;
 
 		// Get pickup date and selected store from POST data
 		if (isset($_POST['pickup_date']) && !empty($_POST['pickup_date'])) {
@@ -239,14 +236,26 @@ class Pickup_Admin
 
 		// Send confirmation email
 		
-		$subject = 'Order Confirmation';
+		$message = '<h2>Store Pickup Details</h2>';
+		$message .= "Pickup Date: $pickup_date".'<br>';
+		$message .= "Selected Store: $selected_store".'<br>';
 
-		$message = "Thank you for your order!\n\n";
-		$message .= "Pickup Date: $pickup_date\n";
-		$message .= "Selected Store: $selected_store\n";
+		echo $message;
+		
+	}
 
-		$headers = array('Content-Type: text/html; charset=UTF-8');
+	//To save pickup location and date
+	function save_order($order){
+		if (isset($_POST['pickup_date']) && isset($_POST['store_options'])) {
+			
+			$pickup_date = sanitize_text_field($_POST['pickup_date']);
+			$selected_store = sanitize_text_field($_POST['store_options']);
+			$order->update_meta_data( 'pickup_id', $pickup_date );
+			$order->update_meta_data( 'store_id', $selected_store );
 
-		wp_mail($to, $subject, $message, $headers);
+		}
+
+		
+
 	}
 }
