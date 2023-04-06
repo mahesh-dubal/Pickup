@@ -20,7 +20,8 @@
  * @subpackage Pickup/admin
  * @author     Mahesh Dubal <mahesh.dubal@wisdmlabs.com>
  */
-class Pickup_Admin {
+class Pickup_Admin
+{
 
 	/**
 	 * The ID of this plugin.
@@ -47,11 +48,11 @@ class Pickup_Admin {
 	 * @param      string    $plugin_name       The name of this plugin.
 	 * @param      string    $version    The version of this plugin.
 	 */
-	public function __construct( $plugin_name, $version ) {
+	public function __construct($plugin_name, $version)
+	{
 
 		$this->plugin_name = $plugin_name;
 		$this->version = $version;
-
 	}
 
 	/**
@@ -59,7 +60,8 @@ class Pickup_Admin {
 	 *
 	 * @since    1.0.0
 	 */
-	public function enqueue_styles() {
+	public function enqueue_styles()
+	{
 
 		/**
 		 * This function is provided for demonstration purposes only.
@@ -73,8 +75,7 @@ class Pickup_Admin {
 		 * class.
 		 */
 
-		wp_enqueue_style( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'css/pickup-admin.css', array(), $this->version, 'all' );
-
+		wp_enqueue_style($this->plugin_name, plugin_dir_url(__FILE__) . 'css/pickup-admin.css', array(), $this->version, 'all');
 	}
 
 	/**
@@ -82,7 +83,8 @@ class Pickup_Admin {
 	 *
 	 * @since    1.0.0
 	 */
-	public function enqueue_scripts() {
+	public function enqueue_scripts()
+	{
 
 		/**
 		 * This function is provided for demonstration purposes only.
@@ -96,8 +98,23 @@ class Pickup_Admin {
 		 * class.
 		 */
 
-		wp_enqueue_script( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'js/pickup-admin.js', array( 'jquery' ), $this->version, false );
-
+		wp_enqueue_script($this->plugin_name, plugin_dir_url(__FILE__) . 'js/pickup-admin.js', array('jquery'), $this->version, false);
 	}
 
+	//To Create a custom post type "Stores"
+	function create_store_post_type()
+	{
+		register_post_type(
+			'store',
+			array(
+				'labels' => array(
+					'name' => __('Stores'),
+					'singular_name' => __('Store')
+				),
+				'public' => true,
+				'has_archive' => true,
+				'supports' => array('title', 'editor', 'thumbnail'),
+			)
+		);
+	}
 }
