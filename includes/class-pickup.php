@@ -166,6 +166,10 @@ class Pickup {
 		//To save meta boxes into post_meta
 		$this->loader->add_action('save_post', $plugin_admin, 'save_store_meta_boxes');
 
+		//To add custom columns on admin panel
+		$this->loader->add_filter('manage_store_posts_columns', $plugin_admin, 'add_store_list_columns');
+
+
 
 
 
