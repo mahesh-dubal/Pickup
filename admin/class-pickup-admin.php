@@ -184,4 +184,13 @@ class Pickup_Admin
 				break;
 		}
 	}
+
+	//To makes the custom columns sortable
+	function make_store_list_columns_sortable($columns)
+	{
+		$columns['store_name'] = 'store_name';
+		$columns['store_address'] = 'store_address';
+		$columns['contact_info'] = 'contact_info';
+		return $columns;
+	}
 }
