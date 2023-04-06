@@ -20,7 +20,8 @@
  * @subpackage Pickup/public
  * @author     Mahesh Dubal <mahesh.dubal@wisdmlabs.com>
  */
-class Pickup_Public {
+class Pickup_Public
+{
 
 	/**
 	 * The ID of this plugin.
@@ -47,11 +48,11 @@ class Pickup_Public {
 	 * @param      string    $plugin_name       The name of the plugin.
 	 * @param      string    $version    The version of this plugin.
 	 */
-	public function __construct( $plugin_name, $version ) {
+	public function __construct($plugin_name, $version)
+	{
 
 		$this->plugin_name = $plugin_name;
 		$this->version = $version;
-
 	}
 
 	/**
@@ -59,7 +60,8 @@ class Pickup_Public {
 	 *
 	 * @since    1.0.0
 	 */
-	public function enqueue_styles() {
+	public function enqueue_styles()
+	{
 
 		/**
 		 * This function is provided for demonstration purposes only.
@@ -73,8 +75,7 @@ class Pickup_Public {
 		 * class.
 		 */
 
-		wp_enqueue_style( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'css/pickup-public.css', array(), $this->version, 'all' );
-
+		wp_enqueue_style($this->plugin_name, plugin_dir_url(__FILE__) . 'css/pickup-public.css', array(), $this->version, 'all');
 	}
 
 	/**
@@ -82,7 +83,8 @@ class Pickup_Public {
 	 *
 	 * @since    1.0.0
 	 */
-	public function enqueue_scripts() {
+	public function enqueue_scripts()
+	{
 
 		/**
 		 * This function is provided for demonstration purposes only.
@@ -96,8 +98,42 @@ class Pickup_Public {
 		 * class.
 		 */
 
-		wp_enqueue_script( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'js/pickup-public.js', array( 'jquery' ), $this->version, false );
-
+		wp_enqueue_script($this->plugin_name, plugin_dir_url(__FILE__) . 'js/pickup-public.js', array('jquery'), $this->version, false);
 	}
 
+	//display store options
+	function display_store_options()
+	{
+		$stores = get_posts(array(
+			'post_type' => 'store',
+			'post_status' => 'publish',
+			'posts_per_page' => -1,
+		));
+
+		$store_data = array();
+
+		foreach ($stores as $store) {
+			$store_name = get_post_meta($store->ID, '_store_name', true);
+			$store_address = get_post_meta($store->ID, '_store_address', true);
+			$contact_info = get_post_meta($store->ID, '_contact_info', true);
+
+			$store_data[] = $store_name . "," . $store_address . "," . $contact_info;
+		}
+
+		// Set minimum allowed date for pickup date field
+		$min_date = date('Y-m-d', strtotime('+1 day'));  // Set minimum date to tomorrow
+
+		$pickup_date_field = '<label for="pickup_date"><h2>Pickup Date</h2></label>
+                          <input type="date" name="pickup_date" id="pickup_date" min="' . $min_date . '" required>';
+
+		$options = 'Select Store';
+		foreach ($store_data as $store) {
+			$options .= '<option value="' . $store . '">' . $store . '</option>';
+		}
+
+		return '<form>' . $pickup_date_field . '<br><br>
+            <label for="store_options"><h2>Select Store</h2></label>
+            <select name="store_options">' . $options . '</select>
+            </form>';
+	}
 }
