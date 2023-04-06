@@ -101,7 +101,14 @@ class Pickup_Public
 		wp_enqueue_script($this->plugin_name, plugin_dir_url(__FILE__) . 'js/pickup-public.js', array('jquery'), $this->version, false);
 	}
 
-	//display store options
+
+	//To define shortcode
+	public function define_shortcode()
+	{
+		add_shortcode('store_options', array($this, 'display_store_options'));
+	}
+
+	//Callback to add_shortcode 
 	function display_store_options()
 	{
 		$stores = get_posts(array(
@@ -136,4 +143,11 @@ class Pickup_Public
             <select name="store_options">' . $options . '</select>
             </form>';
 	}
+
+	//To display shortcode on checkout page
+	function display_store_options_shortcode() {
+		echo do_shortcode('[store_options]');
+	}
+
+	
 }
