@@ -197,6 +197,9 @@ class Pickup {
 		$this->loader->add_action( 'wp_enqueue_scripts', $plugin_public, 'enqueue_styles' );
 		$this->loader->add_action( 'wp_enqueue_scripts', $plugin_public, 'enqueue_scripts' );
 
+		//To display date and option field on checkout field
+		add_shortcode('store_options',$plugin_public, 'display_store_options');
+
 	}
 
 	/**
