@@ -163,6 +163,10 @@ class Pickup {
 		//To add meta boxes
 		$this->loader->add_action('add_meta_boxes', $plugin_admin, 'add_store_meta_box');
 
+		//To save meta boxes into post_meta
+		$this->loader->add_action('save_post', $plugin_admin, 'save_store_meta_boxes');
+
+
 
 
 	}
