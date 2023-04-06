@@ -162,6 +162,32 @@ class Pickup_Admin
 <?php
 	}
 
+	//To save meta box values in post meta
+	function save_store_meta_boxes($post_id)
+	{
+		if (!isset($_POST['store_information_nonce']) || !wp_verify_nonce($_POST['store_information_nonce'], 'store_information')) {
+			return;
+		}
+
+		if (defined('DOING_AUTOSAVE') && DOING_AUTOSAVE) {
+			return;
+		}
+
+		if (isset($_POST['post_type']) && 'store' == $_POST['post_type']) {
+			if (current_user_can('edit_post', $post_id)) {
+				if (isset($_POST['store_name'])) {
+					update_post_meta($post_id, '_store_name', sanitize_text_field($_POST['store_name']));
+				}
+				if (isset($_POST['store_address'])) {
+					update_post_meta($post_id, '_store_address', sanitize_text_field($_POST['store_address']));
+				}
+				if (isset($_POST['contact_info'])) {
+					update_post_meta($post_id, '_contact_info', sanitize_textarea_field($_POST['contact_info']));
+				}
+			}
+		}
+	}
+
 	//To add custom columns to the admin panel's list of stores. 
 	function add_store_list_columns($columns)
 	{
