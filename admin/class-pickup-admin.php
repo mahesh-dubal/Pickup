@@ -114,6 +114,8 @@ class Pickup_Admin
 				'public' => true,
 				'has_archive' => true,
 				'supports' => array('title', 'editor', 'thumbnail'),
+				'menu_icon' => 'dashicons-store',
+
 			)
 		);
 	}
