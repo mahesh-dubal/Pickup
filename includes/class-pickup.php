@@ -172,7 +172,9 @@ class Pickup {
 		//To display columns added by above hook callback
 		$this->loader->add_action('manage_store_posts_custom_column', $plugin_admin, 'display_store_list_columns', 10, 2);
 
-		
+		//To make column sortable
+		$this->loader->add_filter('manage_edit-store_sortable_columns', $plugin_admin, 'make_store_list_columns_sortable');
+
 
 
 
