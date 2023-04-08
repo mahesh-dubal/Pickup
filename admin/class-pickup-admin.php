@@ -224,7 +224,6 @@ class Pickup_Admin
 
 	function send_order_confirmation_mail()
 	{
-
 		// Get pickup date and selected store from POST data
 		if (isset($_POST['pickup_date']) && !empty($_POST['pickup_date'])) {
 			$pickup_date = sanitize_text_field($_POST['pickup_date']);
@@ -253,9 +252,48 @@ class Pickup_Admin
 			$order->update_meta_data( 'pickup_id', $pickup_date );
 			$order->update_meta_data( 'store_id', $selected_store );
 
+		}	
+
+	}
+
+	//Style to hide
+	function local_pickup_fields() {
+		if (is_checkout()) :
+		?>
+		<style>
+			.hide_pickup {display: none!important;}
+		</style>
+		<script>
+			jQuery( function( $ ) {
+				if ( typeof woocommerce_params === 'undefined' ) {
+					return false;
+				}
+				$(document).on( 'change', '#shipping_method input[type="radio"]', function() {
+					
+				$('.billing-dynamic_pickup').toggleClass('hide_pickup', this.value == 'local_pickup:1');
+				});
+			});
+		</script>
+		<?php
+		endif;
+	}
+
+	function hide_local_pickup_method( $fields_pickup ) {
+		// change below for the method
+		$shipping_method_pickup ='local_pickup:1';
+		// change below for the list of fields. Add (or delete) the field name you want (or don’t want) to use
+		$hide_fields_pickup = array( 'billing_company', 'billing_country', 'billing_postcode', 'billing_address_1', 'billing_address_2' , 'billing_city', 'billing_state');
+	 
+		$chosen_methods_pickup = WC()->session->get( 'chosen_shipping_methods' );
+		$chosen_shipping_pickup = $chosen_methods_pickup[0];
+	 
+		foreach($hide_fields_pickup as $field_pickup ) {
+			if ($chosen_shipping_pickup == $shipping_method_pickup) {
+				$fields_pickup['billing'][$field_pickup]['required'] = false;
+				$fields_pickup['billing'][$field_pickup]['class'][] = 'hide_pickup';
+			}
+			$fields_pickup['billing'][$field_pickup]['class'][] = 'billing-dynamic_pickup';
 		}
-
-		
-
+		return $fields_pickup;
 	}
 }
