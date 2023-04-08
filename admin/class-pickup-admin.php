@@ -250,9 +250,8 @@ class Pickup_Admin
 		if (isset($_POST['pickup_date']) && isset($_POST['store_options'])) {
 			
 			$pickup_date = sanitize_text_field($_POST['pickup_date']);
-			$formatted_date = date('d-m-Y', strtotime($pickup_date)); // format date as dd-mm-yyyy
 			$selected_store = sanitize_text_field($_POST['store_options']);
-			$order->update_meta_data( 'pickup_id', $formatted_date );
+			$order->update_meta_data( 'pickup_id', $pickup_date );
 			$order->update_meta_data( 'store_id', $selected_store );
 	
 		}	
@@ -299,4 +298,28 @@ class Pickup_Admin
 		}
 		return $fields_pickup;
 	}
+
+	function send_pickup_reminder_email($order_id) {
+		$order = wc_get_order($order_id);
+		$pickup_date = $order->get_meta('pickup_id');
+		$selected_store = $order->get_meta('store_id');
+		$customer_email = $order->get_billing_email();
+		
+		// Check if pickup date is exactly one day away from today
+		$pickup_timestamp = strtotime($pickup_date);
+		$one_day_before_pickup_timestamp = strtotime('-1 day', $pickup_timestamp);
+		if (date('Y-m-d', $one_day_before_pickup_timestamp) === date('Y-m-d')) {
+			// Send reminder email
+			$subject = 'Reminder: Store Pickup Tomorrow';
+			$message = "<p>Dear customer,</p>";
+			$message .= "<p>This is a reminder that you have a store pickup scheduled for tomorrow at the following location:</p>";
+			$message .= "<p>Selected Store: $selected_store</p>";
+			$formatted_date = date('d-m-Y', strtotime($pickup_date));
+			$message .= "<p>Pickup Date: $formatted_date</p>";
+			$message .= "<p>Thank you for choosing our store. We look forward to seeing you tomorrow.</p>";
+			$headers = array('Content-Type: text/html; charset=UTF-8');
+			wp_mail($customer_email, $subject, $message, $headers);
+		}
+	}
+	
 }
