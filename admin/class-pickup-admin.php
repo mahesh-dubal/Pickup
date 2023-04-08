@@ -236,7 +236,9 @@ class Pickup_Admin
 		// Send confirmation email
 		
 		$message = '<h2>Store Pickup Details</h2>';
-		$message .= "Pickup Date: $pickup_date".'<br>';
+		$formatted_date = date('d-m-Y', strtotime($pickup_date)); // format date as dd-mm-yyyy
+
+		$message .= "Pickup Date: $formatted_date".'<br>';
 		$message .= "Selected Store: $selected_store".'<br>';
 
 		echo $message;
@@ -248,15 +250,16 @@ class Pickup_Admin
 		if (isset($_POST['pickup_date']) && isset($_POST['store_options'])) {
 			
 			$pickup_date = sanitize_text_field($_POST['pickup_date']);
+			$formatted_date = date('d-m-Y', strtotime($pickup_date)); // format date as dd-mm-yyyy
 			$selected_store = sanitize_text_field($_POST['store_options']);
-			$order->update_meta_data( 'pickup_id', $pickup_date );
+			$order->update_meta_data( 'pickup_id', $formatted_date );
 			$order->update_meta_data( 'store_id', $selected_store );
-
+	
 		}	
-
 	}
+	
 
-	//Style to hide
+	//Style to hide checkout fields on pickup option selection
 	function local_pickup_fields() {
 		if (is_checkout()) :
 		?>
