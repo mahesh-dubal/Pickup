@@ -102,11 +102,6 @@ class Pickup_Public
 	}
 
 
-	//To define shortcode
-	public function define_shortcode()
-	{
-		add_shortcode('store_options', array($this, 'display_store_options'));
-	}
 
 	//Callback to add_shortcode 
 	function display_store_options()
@@ -133,21 +128,20 @@ class Pickup_Public
 		$pickup_date_field = '<label for="pickup_date"><h2>Pickup Date</h2></label>
                           <input type="date" name="pickup_date" id="pickup_date" min="' . $min_date . '" required>';
 
+
 		$options = 'Select Store';
 		foreach ($store_data as $store) {
 			$options .= '<option value="' . $store . '">' . $store . '</option>';
 		}
 
-		return '<form>' . $pickup_date_field . '<br><br>
+		$var =  '<form>' . $pickup_date_field . '<br><br>
             <label for="store_options"><h2>Select Store</h2></label>
             <select name="store_options">' . $options . '</select>
             </form>';
+
+			echo $var;
 	}
 
-	//To display shortcode on checkout page
-	function display_store_options_shortcode() {
-		echo do_shortcode('[store_options]');
-	}
 
 	
 }
