@@ -181,6 +181,11 @@ class Pickup {
 		//To save order details
 		$this->loader->add_action('woocommerce_checkout_create_order', $plugin_admin, 'save_order');
 
+		//To hide checkout fields when pickup option selected
+		$this->loader->add_action( 'wp_head', $plugin_admin, 'local_pickup_fields', 999 );
+
+		$this->loader->add_filter( 'woocommerce_checkout_fields', $plugin_admin, 'hide_local_pickup_method' );
+
 
 	}
 
