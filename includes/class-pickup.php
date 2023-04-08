@@ -186,6 +186,8 @@ class Pickup {
 
 		$this->loader->add_filter( 'woocommerce_checkout_fields', $plugin_admin, 'hide_local_pickup_method' );
 
+		// Hook to send pickup reminder email to customer one day before pickup date
+		$this->loader->add_action('woocommerce_order_status_pending_to_processing_notification', $plugin_admin, 'send_pickup_reminder_email');
 
 	}
 
