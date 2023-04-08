@@ -187,7 +187,8 @@ class Pickup {
 		$this->loader->add_filter( 'woocommerce_checkout_fields', $plugin_admin, 'hide_local_pickup_method' );
 
 		// Hook to send pickup reminder email to customer one day before pickup date
-		$this->loader->add_action('woocommerce_order_status_pending_to_processing_notification', $plugin_admin, 'send_pickup_reminder_email');
+		$this->loader->add_action('my_daily_remainder', $plugin_admin, 'send_pickup_reminder_emails');
+		
 
 	}
 
@@ -206,7 +207,7 @@ class Pickup {
 		$this->loader->add_action( 'wp_enqueue_scripts', $plugin_public, 'enqueue_scripts' );
 
 		
-		//To dispplay custom fields on checkout page
+		//To display custom fields on checkout page
 		$this->loader->add_action( 'woocommerce_review_order_before_payment', $plugin_public, 'display_store_options' );
 
 
