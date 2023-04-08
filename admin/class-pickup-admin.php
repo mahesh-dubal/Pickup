@@ -102,7 +102,7 @@ class Pickup_Admin
 	}
 
 	//To Create a custom post type "Stores"
-	function create_store_post_type()
+	public function create_store_post_type()
 	{
 		register_post_type(
 			'store',
@@ -113,7 +113,7 @@ class Pickup_Admin
 				),
 				'public' => true,
 				'has_archive' => true,
-				'supports' => array('title', 'editor', 'thumbnail'),
+				'supports' => array('author'),
 				'menu_icon' => 'dashicons-store',
 
 			)
@@ -121,12 +121,12 @@ class Pickup_Admin
 	}
 
 	//Adding custom meta boxes to the this custom post type
-	function add_store_meta_box()
+	public function add_store_meta_box()
 	{
 		add_meta_box(
 			'store_information',
 			__('Store Information', 'pickup'),
-			'store_information_meta_box_callback',
+			array($this,'store_information_meta_box_callback'),
 			'store',
 			'normal',
 			'high'
@@ -134,7 +134,7 @@ class Pickup_Admin
 	}
 
 	//Callback for add_meta_box to create HTML markup for metaboxes
-	function store_information_meta_box_callback($post)
+	public function store_information_meta_box_callback($post)
 	{
 		$store_name = get_post_meta($post->ID, '_store_name', true);
 		$store_address = get_post_meta($post->ID, '_store_address', true);
@@ -163,7 +163,7 @@ class Pickup_Admin
 	}
 
 	//To save meta box values in post meta
-	function save_store_meta_boxes($post_id)
+	public function save_store_meta_boxes($post_id)
 	{
 		if (!isset($_POST['store_information_nonce']) || !wp_verify_nonce($_POST['store_information_nonce'], 'store_information')) {
 			return;
@@ -189,7 +189,7 @@ class Pickup_Admin
 	}
 
 	//To add custom columns to the admin panel's list of stores. 
-	function add_store_list_columns($columns)
+	public function add_store_list_columns($columns)
 	{
 		$columns['store_name'] = __('Store Name', 'pickup');
 		$columns['store_address'] = __('Store Address', 'pickup');
@@ -198,7 +198,7 @@ class Pickup_Admin
 	}
 
 	//To display the data for each column added by the previous function.
-	function display_store_list_columns($column, $post_id)
+	public function display_store_list_columns($column, $post_id)
 	{
 		switch ($column) {
 			case 'store_name':
@@ -214,7 +214,7 @@ class Pickup_Admin
 	}
 
 	//To makes the custom columns sortable
-	function make_store_list_columns_sortable($columns)
+	public function make_store_list_columns_sortable($columns)
 	{
 		$columns['store_name'] = 'store_name';
 		$columns['store_address'] = 'store_address';
@@ -222,7 +222,7 @@ class Pickup_Admin
 		return $columns;
 	}
 
-	function send_order_confirmation_mail()
+	public function send_order_confirmation_mail()
 	{
 		// Get pickup date and selected store from POST data
 		if (isset($_POST['pickup_date']) && !empty($_POST['pickup_date'])) {
@@ -246,7 +246,7 @@ class Pickup_Admin
 	}
 
 	//To save pickup location and date
-	function save_order($order){
+	public function save_order($order){
 		if (isset($_POST['pickup_date']) && isset($_POST['store_options'])) {
 			
 			$pickup_date = sanitize_text_field($_POST['pickup_date']);
@@ -259,7 +259,7 @@ class Pickup_Admin
 	
 
 	//Style to hide checkout fields on pickup option selection
-	function local_pickup_fields() {
+	public function local_pickup_fields() {
 		if (is_checkout()) :
 		?>
 		<style>
@@ -280,7 +280,7 @@ class Pickup_Admin
 		endif;
 	}
 
-	function hide_local_pickup_method( $fields_pickup ) {
+	public function hide_local_pickup_method( $fields_pickup ) {
 		// change below for the method
 		$shipping_method_pickup ='local_pickup:1';
 		// change below for the list of fields. Add (or delete) the field name you want (or don’t want) to use
@@ -299,7 +299,29 @@ class Pickup_Admin
 		return $fields_pickup;
 	}
 
-	function send_pickup_reminder_email($order_id) {
+	//Accessing all orders having pickupdate tommorow
+	public function send_pickup_reminder_emails() {
+		$args = array(
+			'post_type' => 'shop_order',
+			'posts_per_page' => '-1',
+			'post_status' => 'any'
+		  );
+	  
+		$query = new WP_Query($args);
+		$posts = $query->posts;
+
+		// Calculate next day
+		$next_day = strtotime( '+1 day', current_time( 'timestamp' ) );
+		$next_day_date = date( 'Y-m-d', $next_day );
+	
+		foreach ( $posts as $post ) {
+			$order_id = $post->ID;
+			$this->send_pickup_reminder_email($order_id);
+		}
+	}
+
+	//To send remainder mail
+	public function send_pickup_reminder_email($order_id) {
 		$order = wc_get_order($order_id);
 		$pickup_date = $order->get_meta('pickup_id');
 		$selected_store = $order->get_meta('store_id');
@@ -320,6 +342,7 @@ class Pickup_Admin
 			$headers = array('Content-Type: text/html; charset=UTF-8');
 			wp_mail($customer_email, $subject, $message, $headers);
 		}
+
 	}
-	
+
 }
