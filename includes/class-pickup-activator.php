@@ -32,11 +32,10 @@ class Pickup_Activator
 	 */
 	public static function activate()
 	{
-		$now = time();
-		$scheduled_time = strtotime('23:59:00', $now); // Set the scheduled time to 23:59:00
 		// Schedule the event to run every day at 23:59
 		if (!wp_next_scheduled('my_daily_remainder')) {
-			wp_schedule_event($scheduled_time, 'daily', 'my_daily_remainder');
+			// wp_schedule_event(time(), 'daily', 'my_daily_remainder');
+			wp_schedule_event(strtotime("23:59:00"), 'daily', 'my_daily_remainder');
 		}
 	}
 }
